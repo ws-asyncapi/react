@@ -30,6 +30,7 @@ import {
     type RpcError,
     type TypedRpcError,
     type WebsocketAsyncAPIOptions,
+    type WsClient,
 } from "@ws-asyncapi/client";
 import {
     connectionStore,
@@ -40,6 +41,7 @@ import {
     type QueryCoreClient,
     requestQueryOptions,
     type StreamReduce,
+    type Subscribable,
     streamStore,
     subscribeHistoryLive,
 } from "@ws-asyncapi/query-core";
@@ -48,6 +50,19 @@ import type { AnyChannel, InferClient } from "ws-asyncapi";
 
 // re-export the pure fold + its type for convenience / testing
 export { streamFold, type StreamReduce } from "@ws-asyncapi/query-core";
+
+/**
+ * Bind any `query-core` {@link Subscribable} (e.g. `cursorsStore` from
+ * `@ws-asyncapi/cursors`, or your own) to a React value. The generic escape
+ * hatch that keeps cursor/other opinions out of this package.
+ */
+export function useStore<T>(store: Subscribable<T>): T {
+    return useSyncExternalStore(
+        store.subscribe,
+        store.getSnapshot,
+        store.getSnapshot,
+    );
+}
 
 /** The shape inferred from a channel — what the hooks are typed against. */
 type Shape = InferClient<AnyChannel>;
@@ -62,12 +77,15 @@ export interface PresenceResult<State> {
     members: Map<string, State>;
     self: string | null;
     set: (state: State) => Promise<void>;
+    /** volatile, fire-and-forget update (cursor hot path) — see `presence.update` */
+    update: (patch: Partial<State>) => void;
     clear: () => Promise<void>;
 }
 
 export interface ReactClient<T extends Shape> {
-    /** the underlying client (escape hatch: `opened`, raw `request`, …) */
-    client: ReturnType<typeof createClient<AnyChannel>>;
+    /** the underlying, precisely-typed client (escape hatch: `opened`, raw
+     *  `request`, `presence.update`, …; also what `cursorsStore` consumes) */
+    client: WsClient<T>;
 
     useRequest<C extends keyof T["rpcMap"]>(
         command: C,
@@ -176,6 +194,7 @@ export function createReactClient<C extends AnyChannel>(
             members: snap.members,
             self: snap.self,
             set: presence.set,
+            update: presence.update,
             clear: presence.clear,
         };
     }
