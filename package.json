@@ -26,6 +26,7 @@
     "peerDependencies": {
         "@tanstack/react-query": "^5.0.0",
         "@ws-asyncapi/client": "^0.1.0",
+        "@ws-asyncapi/query-core": "^0.1.0",
         "react": ">=18",
         "ws-asyncapi": "^0.1.0"
     },
