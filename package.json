@@ -1,0 +1,40 @@
+{
+    "name": "@ws-asyncapi/react",
+    "version": "0.1.0",
+    "description": "Typed React hooks for ws-asyncapi — RPCs as TanStack Query queries/mutations, plus live presence, history, and streams",
+    "license": "MIT",
+    "type": "module",
+    "author": {
+        "url": "https://github.com/kravetsone",
+        "name": "kravets"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ws-asyncapi/react.git"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
+        }
+    },
+    "files": ["dist"],
+    "scripts": {
+        "prepublishOnly": "bunx pkgroll"
+    },
+    "peerDependencies": {
+        "@tanstack/react-query": "^5.0.0",
+        "@ws-asyncapi/client": "^0.1.0",
+        "react": ">=18",
+        "ws-asyncapi": "^0.1.0"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "^1.9.4",
+        "@tanstack/react-query": "^5.101.0",
+        "@types/bun": "latest",
+        "@types/react": "^19.2.16",
+        "pkgroll": "^2.11.2",
+        "react": "^19.2.7"
+    }
+}
