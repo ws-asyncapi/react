@@ -19,7 +19,9 @@
             "require": "./dist/index.cjs"
         }
     },
-    "files": ["dist"],
+    "files": [
+        "dist"
+    ],
     "scripts": {
         "prepublishOnly": "bunx pkgroll"
     },
@@ -36,6 +38,7 @@
         "@types/bun": "latest",
         "@types/react": "^19.2.16",
         "pkgroll": "^2.11.2",
-        "react": "^19.2.7"
+        "react": "^19.2.7",
+        "typescript": "^5.8.2"
     }
 }
